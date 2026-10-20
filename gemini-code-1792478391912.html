@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title id="page-title">رامجی | Ramji</title>
+
+    <!-- تنظیمات PWA و نصب در موبایل (اندروید و آیفون) -->
+    <meta name="theme-color" content="#0b1d16">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Ramji">
+    <meta name="application-name" content="Ramji">
+
+    <link rel="manifest" id="pwa-manifest-link">
+
+    <!-- گوگل اسکریپت برای ورود با جیمیل -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --glass-highlight: rgba(255, 255, 255, 0.24);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.6);
+            --accent: #d4af37;
+            --danger: #ff4d4d;
+            --success: #34d399;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #0b1d16;
+            background-image: 
+                radial-gradient(at 10% 15%, rgba(28, 78, 58, 0.75) 0px, transparent 50%),
+                radial-gradient(at 90% 25%, rgba(180, 130, 50, 0.2) 0px, transparent 55%),
+                radial-gradient(at 50% 90%, rgba(15, 48, 35, 0.85) 0px, transparent 60%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding-top: env(safe-area-inset-top);
+        }
+
+        .app-shell {
+            width: 100%;
+            max-width: 440px;
+            min-height: 100vh;
+            padding: 18px 14px 125px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* هدر خلوت و منظم بالا */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2px 4px;
+            gap: 10px;
+        }
+
+        .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .title-line {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .top-bar h1 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            display: inline-block;
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .status-dot.offline {
+            background: var(--accent);
+            box-shadow: 0 0 6px var(--accent);
+        }
+
+        .target-sub {
+            font-size: 0.74rem;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .target-sub.finished-text {
+            color: var(--success);
+        }
+
+        .live-clock {
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            padding: 8px 14px;
+            border-radius: 18px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: transform 0.12s, background 0.2s;
+            white-space: nowrap;
+        }
+
+        .pill-btn:active {
+            transform: scale(0.95);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .pill-btn.gold {
+            background: rgba(212, 175, 55, 0.16);
+            border-color: rgba(212, 175, 55, 0.4);
+            color: #fce79c;
+        }
+
+        .settings-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.12s, background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .settings-icon-btn:active {
+            transform: scale(0.93);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* کارت‌های شیشه‌ای بازیکنان */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            border-radius: 20px;
+            padding: 13px 10px 11px;
+            text-align: center;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease, border-color 0.2s;
+            overflow: hidden;
+        }
+
+        .glass-card:active {
+            transform: scale(0.97);
+        }
+
+        .glass-card.leader {
+            background: rgba(212, 175, 55, 0.14);
+            border-color: rgba(212, 175, 55, 0.45);
+        }
+
+        .leader-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 4px;
+            opacity: 0;
+        }
+
+        .glass-card.leader .leader-dot {
+            opacity: 1;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .player-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .glass-card.leader .player-name {
+            color: var(--text-primary);
+        }
+
+        .player-total {
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            line-height: 1.15;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.45);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .glass-card.leader .progress-fill {
+            background: var(--accent);
+        }
+
+        /* جدول شیشه‌ای نمرات */
+        .sheet-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-highlight);
+            border-radius: 24px;
+            padding: 6px 0;
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.26);
+            flex-grow: 1;
+            overflow-x: auto;
+        }
+
+        .sheet-header, .round-row {
+            display: grid;
+            grid-template-columns: 34px repeat(3, 1fr) 48px 30px;
+            align-items: center;
+            text-align: center;
+            padding: 12px 8px;
+        }
+
+        .sheet-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .round-row {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 1.02rem;
+            font-weight: 600;
+        }
+
+        .round-row:last-child {
+            border-bottom: none;
+        }
+
+        .round-num {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.35);
+            font-weight: 500;
+        }
+
+        .round-sum-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.28);
+            border-radius: 8px;
+            padding: 2px 4px;
+            display: inline-block;
+            min-width: 34px;
+        }
+
+        .round-sum-badge.neg-sum {
+            color: var(--danger);
+            background: rgba(255, 77, 77, 0.14);
+            border-color: rgba(255, 77, 77, 0.35);
+        }
+
+        /* استایل نمره منفی و آیکن‌های چکش و کارت ۴ */
+        .negative-score {
+            color: var(--danger) !important;
+            font-weight: 800;
+        }
+
+        .score-cell-wrap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        .hammer-icon {
+            font-size: 0.92rem;
+            filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.5));
+        }
+
+        .card4-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffffff;
+            color: #d90429;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+            line-height: 1.1;
+            letter-spacing: -0.5px;
+        }
+
+        .empty-score {
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 400;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .del-btn:active {
+            color: var(--danger);
+        }
+
+        .del-btn:disabled {
+            opacity: 0.15;
+            cursor: not-allowed;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 38px 20px;
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 0.86rem;
+        }
+
+        /* فوتر کریدت سازنده */
+        .app-credit-footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            padding: 8px 0 2px;
+            letter-spacing: -0.2px;
+        }
+
+        .app-credit-footer b {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* نوار شیشه‌ای پایین */
+        .bottom-dock {
+            position: fixed;
+            bottom: max(16px, env(safe-area-inset-bottom));
+            width: calc(100% - 28px);
+            max-width: 412px;
+            background: rgba(18, 35, 28, 0.82);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 7px;
+            display: flex;
+            gap: 7px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .btn-main {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.93);
+            color: #0b1d16;
+            border: none;
+            border-radius: 18px;
+            padding: 13px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.12s ease, opacity 0.2s;
+        }
+
+        .btn-main:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .btn-main.locked, .btn-main:disabled {
+            background: rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: not-allowed;
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.09);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-primary);
+            border-radius: 18px;
+            padding: 0 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* مودال کشویی (Bottom Sheet) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.62);
+            backdrop-filter: blur(7px);
+            -webkit-backdrop-filter: blur(7px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+            z-index: 100;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .bottom-sheet {
+            width: 100%;
+            max-width: 440px;
+            max-height: 86vh;
+            overflow-y: auto;
+            background: rgba(20, 38, 30, 0.95);
+            backdrop-filter: blur(35px);
+            -webkit-backdrop-filter: blur(35px);
+            border-top: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 28px 28px 0 0;
+            padding: 14px 18px max(28px, env(safe-area-inset-bottom));
+            transform: translateY(100%);
+            transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+        }
+
+        .modal-overlay.active .bottom-sheet {
+            transform: translateY(0);
+        }
+
+        .sheet-handle {
+            width: 36px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 10px;
+            margin: 0 auto 14px;
+        }
+
+        .sheet-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .sheet-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        /* فرم ثبت نمرات و دکمه منفی */
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-box label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-minus-penalty {
+            width: 100%;
+            background: rgba(255, 77, 77, 0.16);
+            border: 1px solid rgba(255, 77, 77, 0.45);
+            color: var(--danger);
+            border-radius: 11px;
+            padding: 6px 4px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.12s, background 0.2s;
+            text-align: center;
+        }
+
+        .btn-minus-penalty:active {
+            transform: scale(0.94);
+            background: rgba(255, 77, 77, 0.3);
+        }
+
+        .input-box input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px 6px;
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+        }
+
+        .input-box input:focus {
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        .score-error-msg {
+            background: rgba(255, 77, 77, 0.14);
+            border: 1px solid rgba(255, 77, 77, 0.38);
+            color: var(--danger);
+            border-radius: 12px;
+            padding: 9px 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .score-error-msg.show {
+            display: block;
+        }
+
+        /* لیست ویرایش بازیکنان (ثابت ۳ نفر) */
+        .players-editor-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .player-edit-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .player-edit-row input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            color: #fff;
+            font-size: 0.92rem;
+            font-weight: 600;
+            outline: none;
+        }
+
+        .sheet-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sheet-actions.col {
+            flex-direction: column;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #e5c158, #b89028);
+            color: #0b1d16;
+            border: none;
+            border-radius: 16px;
+            padding: 14px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+            margin: 14px 0;
+        }
+
+        .btn-reset-scores {
+            width: 100%;
+            background: rgba(255, 107, 107, 0.12);
+            border: 1px solid rgba(255, 107, 107, 0.25);
+            color: var(--danger);
+            border-radius: 16px;
+            padding: 12px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* کارت‌های تاریخچه */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 12px 14px;
+        }
+
+        .history-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .history-winner {
+            color: #fce79c;
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        .history-target-tag {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+        .history-datetime {
+            font-size: 0.74rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .history-scores {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history-pill {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* استایل‌های بخش تنظیمات */
+        .settings-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 13px 14px;
+            margin-bottom: 12px;
+        }
+
+        .settings-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-switch-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .lang-option-btn {
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 10px;
+            border-radius: 13px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .lang-option-btn.active {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--accent);
+            color: #fce79c;
+        }
+
+        .account-user-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid rgba(212, 175, 55, 0.35);
+            border-radius: 14px;
+            padding: 10px 12px;
+            cursor: pointer;
+        }
+
+        .account-user-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .user-avatar-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e5c158, #b89028);
+            color: #0b1d16;
+            font-size: 0.9rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .account-user-texts {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .account-user-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #fce79c;
+        }
+
+        .account-user-email {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .account-dropdown-actions {
+            margin-top: 10px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .account-dropdown-actions.open {
+            display: flex;
+        }
+
+        .install-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .install-platform-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 12px 10px;
+            border-radius: 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.12s, background 0.2s;
+        }
+
+        .install-platform-btn:active {
+            transform: scale(0.96);
+        }
+
+        .install-platform-btn.android {
+            background: rgba(52, 211, 153, 0.14);
+            border-color: rgba(52, 211, 153, 0.35);
+            color: #a7f3d0;
+        }
+
+        .install-platform-btn.ios {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .install-help-box {
+            margin-top: 10px;
+            background: rgba(0, 0, 0, 0.32);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.78rem;
+            line-height: 1.65;
+            color: var(--text-primary);
+            display: none;
+        }
+
+        .install-help-box.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- سرصفحه خلوت و تمیز بالا -->
+    <div class="top-bar">
+        <div class="title-group">
+            <div class="title-line">
+                <h1 id="app-title">بازی رامجی</h1>
+                <span class="status-dot" id="network-dot" title="Offline Ready"></span>
+            </div>
+            <span class="target-sub" id="target-badge">هدف برنده: ۱۰۰ نمره • ۰ دست</span>
+            <span class="live-clock" id="live-afghan-clock"></span>
+        </div>
+        <div class="top-actions">
+            <button class="pill-btn gold" id="new-game-top-btn" onclick="startNewGameTop()">+ بازی جدید</button>
+            <button class="settings-icon-btn" id="settings-top-btn" onclick="openSettingsModal()" title="Settings / تنظیمات">⚙️</button>
+        </div>
+    </div>
+
+    <!-- کارت‌های شیشه‌ای بازیکنان -->
+    <div class="summary-grid" id="summary-grid"></div>
+
+    <!-- جدول نمرات -->
+    <div class="sheet-container">
+        <div class="sheet-header" id="sheet-header"></div>
+        <div class="rounds-list" id="rounds-list"></div>
+    </div>
+
+    <!-- فوتر کریدت سازنده (ساخته شده توسط ولید صدیقی) -->
+    <div class="app-credit-footer" id="app-credit-footer">
+        ساخته شده توسط <b>ولید صدیقی</b>
+    </div>
+
+    <!-- نوار پایین موبایل -->
+    <div class="bottom-dock">
+        <button class="btn-main" id="btn-dock-add-round" onclick="openScoreModal()">+ ثبت دست جدید</button>
+        <button class="btn-glass" id="btn-dock-players" onclick="openPlayersModal(false)">بازیکنان</button>
+        <button class="btn-glass" id="btn-dock-history" onclick="openHistoryModal()">تاریخچه</button>
+    </div>
+</div>
+
+<!-- مودال ۱: ثبت نمره دست جدید -->
+<div class="modal-overlay" id="score-modal" onclick="closeOnBg(event, 'score-modal')">
+    <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="score-modal-title">نمرات دست جدید</div>
+        <div class="sheet-desc" id="score-modal-desc" style="margin-bottom: 12px; font-size: 0.76rem;">
+            مجموع نمرات هر دست باید دقیقاً ۱۵ باشد (مگر ۲۰ تکی با 🔨)
+        </div>
+        <div class="inputs-grid" id="score-inputs-grid"></div>
+        <div class="score-error-msg" id="score-error-msg"></div>
+        <div class="sheet-actions">
+            <button class="btn-main" id="btn-save-round" onclick="saveRound()">ثبت</button>
+            <button class="btn-cancel" id="btn-cancel-round" onclick="closeModal('score-modal')">انصراف</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ۲: ورود نام بازیکنان در بازی جدید / مدیریت بازیکنان (ثابت ۳ نفر) -->
+<div class="modal-overlay" id="players-modal" onclick="closeOnBg(event, 'players-modal')">
+    <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="players-modal-title">نام بازیکنان (۳ نفر)</div>
+        <div class="sheet-desc" id="players-modal-desc">نام بازیکنان قبلی به صورت پیش‌فرض نوشته شده؛ در صورت نیاز تغییر دهید یا مستقیم شروع کنید</div>
+        
+        <div class="players-editor-list" id="players-editor-list"></div>
+
+        <div class="sheet-actions">
+            <button class="btn-main" id="btn-save-players" onclick="savePlayersChanges()">شروع بازی</button>
+            <button class="btn-cancel" id="btn-close-players" onclick="closeModal('players-modal')">بستن</button>
+        </div>
+
+        <div id="reset-scores-section">
+            <div class="divider"></div>
+            <button class="btn-reset-scores" id="btn-zero-scores" onclick="zeroCurrentScores()">شروع مجدد و صفر کردن نمرات همین بازی</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ۳: عبور از سقف امتیاز -->
+<div class="modal-overlay" id="target-modal">
+    <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="target-modal-title">عبور از سقف ۱۰۰ نمره!</div>
+        <div class="sheet-desc" id="target-modal-desc"></div>
+        <div class="sheet-actions col">
+            <button class="btn-gold" id="btn-finish-game" onclick="finishAndArchiveGame()">ختم بازی و ثبت برنده در تاریخچه</button>
+            <button class="btn-main" id="btn-continue-game" onclick="extendTargetScore()">ادامه بازی تا ۱۵۰ نمره</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ۴: تاریخچه بازی‌ها -->
+<div class="modal-overlay" id="history-modal" onclick="closeOnBg(event, 'history-modal')">
+    <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="history-modal-title">تاریخچه بازی‌های قبلی</div>
+        <div class="history-list" id="history-list"></div>
+        <div class="sheet-actions">
+            <button class="btn-reset-scores" id="btn-clear-history" onclick="clearHistory()" style="display:none;">پاک کردن کل تاریخچه</button>
+            <button class="btn-cancel" id="btn-close-history" onclick="closeModal('history-modal')">بستن</button>
+        </div>
+    </div>
+</div>
+
+<!-- مودال ۵: تنظیمات -->
+<div class="modal-overlay" id="settings-modal" onclick="closeOnBg(event, 'settings-modal')">
+    <div class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <div class="sheet-title" id="settings-modal-title" style="margin-bottom: 14px;">تنظیمات</div>
+
+        <!-- بخش ۱: زبان برنامه -->
+        <div class="settings-section">
+            <div class="settings-label" id="settings-lang-label">🌐 زبان برنامه / Language</div>
+            <div class="lang-switch-group">
+                <button class="lang-option-btn" id="btn-lang-fa" onclick="setLanguage('fa')">فارسی</button>
+                <button class="lang-option-btn" id="btn-lang-en" onclick="setLanguage('en')">English</button>
+            </div>
+        </div>
+
+        <!-- بخش ۲: حساب کاربری و ورود / خروج -->
+        <div class="settings-section">
+            <div class="settings-label" id="settings-account-label">👤 حساب کاربری (جیمیل)</div>
+            <div id="settings-account-content"></div>
+        </div>
+
+        <!-- بخش ۳: نصب اپلیکیشن در موبایل -->
+        <div class="settings-section">
+            <div class="settings-label" id="settings-install-label">📲 نصب اپلیکیشن در موبایل</div>
+            <div class="install-grid">
+                <button class="install-platform-btn android" onclick="installAndroidApp()">
+                    <span style="font-size: 1.25rem;">🤖</span>
+                    <span id="btn-install-android-text">نصب در اندروید</span>
+                </button>
+                <button class="install-platform-btn ios" onclick="toggleIosInstallHelp()">
+                    <span style="font-size: 1.25rem;">🍏</span>
+                    <span id="btn-install-ios-text">نصب در آیفون</span>
+                </button>
+            </div>
+            <div class="install-help-box" id="install-feedback-box"></div>
+        </div>
+
+        <div class="sheet-actions">
+            <button class="btn-cancel" id="btn-close-settings" onclick="closeModal('settings-modal')">بستن</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const STORAGE_KEY = 'ramji_state_v5';
+    const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
+
+    // دیکشنری دوزبانه
+    const I18N = {
+        fa: {
+            pageTitle: "رامجی | Ramji",
+            appTitle: "بازی رامجی",
+            newGameTop: "+ بازی جدید",
+            targetActive: (target, rounds) => `هدف برنده: ${toFaDigits(target)} نمره • ${toFaDigits(rounds)} دست`,
+            targetFinished: (winner, rounds) => `بازی ختم شد (برنده: ${winner}) • ${toFaDigits(rounds)} دست`,
+            roundCol: "دست",
+            sumCol: "مجموع",
+            emptyRounds: "هنوز هیچ دستی ثبت نشده است",
+            creditFooter: "ساخته شده توسط <b>ولید صدیقی</b>",
+            dockAddRound: "+ ثبت دست جدید",
+            dockLocked: "🔒 بازی ختم شده است",
+            dockPlayers: "بازیکنان",
+            dockHistory: "تاریخچه",
+            scoreModalTitle: (r) => `ثبت نمرات دست ${toFaDigits(r)}`,
+            errBelow15: (sum) => `خطا: مجموع نمرات این دست (${toFaDigits(sum)}) کمتر از ۱۵ است! مجموع نمرات باید ۱۵ باشد.`,
+            errAbove15: (sum) => `خطا: مجموع نمرات این دست (${toFaDigits(sum)}) از ۱۵ بیشتر شده است!`,
+            errTwentyNotAlone: "خطا: وقتی یک نفر ۲۰ نمره می‌گیرد، فقط همان یک نفر ۲۰ است و دیگران اجازه گرفتن نمره ندارند (باید ۰ باشند)!",
+            minusBtnText: (val) => `منفی (${toFaDigits(val)})`,
+            errExact15: (sum) => `خطا: مجموع نمرات این دست (${toFaDigits(sum)}) است! مجموع هر دست باید دقیقاً ۱۵ نمره باشد (مگر اینکه فقط یک نفر ۲۰ بگیرد و بقیه ۰ باشند).`,
+            errNegativeManual: "برای ثبت نمره منفی، از دکمه سرخ «منفی» بالای نام بازیکن استفاده کنید.",
+            saveRoundBtn: "ثبت",
+            cancelBtn: "انصراف",
+            closeBtn: "بستن",
+            playersTitleNew: "شروع بازی جدید (۳ نفره)",
+            playersDescNew: "نام بازیکنان قبلی به صورت پیش‌فرض نوشته شده؛ در صورت نیاز تغییر دهید یا مستقیم شروع کنید:",
+            playersTitleEdit: "ویرایش نام بازیکنان (۳ نفر)",
+            playersDescEdit: "می‌توانید نام هر یک از ۳ بازیکن را تغییر دهید",
+            startGameBtn: "شروع بازی جدید",
+            savePlayersBtn: "ذخیره تغییرات",
+            zeroScoresBtn: "شروع مجدد و صفر کردن نمرات همین بازی",
+            playerPlaceholder: (idx) => `نام بازیکن ${toFaDigits(idx)}`,
+            defaultPlayerName: (idx) => `بازیکن ${toFaDigits(idx)}`,
+            targetModalTitle: (t) => `عبور از سقف ${toFaDigits(t)} نمره!`,
+            targetModalDesc: (names, t, nextT) => `بازیکن <b>${names}</b> از مرز ${toFaDigits(t)} نمره عبور کرد. آیا بازی را ختم می‌کنید یا تا ${toFaDigits(nextT)} نمره ادامه می‌دهید؟`,
+            finishGameBtn: "ختم بازی و ثبت برنده در تاریخچه",
+            continueGameBtn: (nextT) => `ادامه بازی تا ${toFaDigits(nextT)} نمره`,
+            historyModalTitle: "تاریخچه بازی‌های قبلی",
+            emptyHistory: "هنوز هیچ بازی پایان‌یافته‌ای در تاریخچه ثبت نشده است",
+            clearHistoryBtn: "پاک کردن کل تاریخچه",
+            historyWinnerLabel: (w) => `🏆 برنده: ${w}`,
+            historyTargetTag: (t, r) => `سقف ${toFaDigits(t)} • ${toFaDigits(r)} دست`,
+            confirmDeleteRound: "این دست حذف شود؟",
+            confirmZeroScores: "نمرات تمام بازیکنان در این بازی صفر شود؟",
+            confirmClearHistory: "تمام تاریخچه بازی‌های قبلی پاک شود؟",
+            afghanTimePrefix: "وقت افغانستان: ",
+            settingsTitle: "تنظیمات",
+            settingsLangLabel: "🌐 زبان برنامه / Language",
+            settingsAccountLabel: "👤 حساب کاربری (جیمیل)",
+            settingsInstallLabel: "📲 نصب اپلیکیشن در موبایل",
+            installAndroidBtn: "نصب در اندروید",
+            installIosBtn: "نصب در آیفون",
+            signInGmailBtn: "ورود با حساب جیمیل",
+            signInPromptEmail: "ایمیل جیمیل خود را وارد کنید:",
+            signInPromptName: "نام نمایشی شما:",
+            switchAccountBtn: "تغییر حساب جیمیل",
+            logoutAccountBtn: "خروج از حساب کاربری",
+            notSignedInText: "شما هنوز وارد حساب جیمیل نشده‌اید. تمام اطلاعات در حافظه موبایل شما نیز ذخیره می‌شود.",
+            androidInstalledMsg: "✅ اپلیکیشن در حال نصب یا از قبل روی گوشی شما نصب شده است.",
+            androidManualHelp: "📌 برای نصب در اندروید: در مرورگر کروم بالای صفحه روی منوی سه نقطه <b>(⋮)</b> بزنید و گزینه <b>Install app</b> یا <b>Add to Home screen</b> را انتخاب کنید.",
+            iosManualHelp: "🍏 <b>راهنمای نصب در آیفون (iOS):</b><br>۱. این صفحه را در مرورگر <b>Safari</b> باز کنید.<br>۲. در نوار پایین روی دکمه <b>Share</b> (مربع با فلش رو به بالا ⬆️) بزنید.<br>۳. گزینه <b>Add to Home Screen</b> را انتخاب کرده و در بالا <b>Add</b> را بزنید."
+        },
+        en: {
+            pageTitle: "Ramji | Scorekeeper",
+            appTitle: "Ramji Game",
+            newGameTop: "+ New Game",
+            targetActive: (target, rounds) => `Target: ${target} pts • ${rounds} rounds`,
+            targetFinished: (winner, rounds) => `Finished (Winner: ${winner}) • ${rounds} rounds`,
+            roundCol: "#",
+            sumCol: "Sum",
+            emptyRounds: "No rounds recorded yet",
+            creditFooter: "Created by <b>Walid Sediqi</b>",
+            dockAddRound: "+ Add New Round",
+            dockLocked: "🔒 Game Finished",
+            dockPlayers: "Players",
+            dockHistory: "History",
+            scoreModalTitle: (r) => `Round ${r} Scores`,
+            scoreModalDesc: "Round total must be exactly 15 pts (except single 20 with 🔨)",
+            minusBtnText: (val) => `Minus (${val})`,
+            errExact15: (sum) => `Error: Round sum is (${sum})! Total must be exactly 15 (unless one player gets 20 and others are 0).`,
+            errNegativeManual: "Please use the red 'Minus' button above the player's box for negative scores.",
+            saveRoundBtn: "Submit",
+            cancelBtn: "Cancel",
+            closeBtn: "Close",
+            playersTitleNew: "Start New Game (3 Players)",
+            playersDescNew: "Previous player names are pre-filled; edit if needed or start right away:",
+            playersTitleEdit: "Edit Players (3 Players)",
+            playersDescEdit: "You can rename any of the 3 players",
+            startGameBtn: "Start New Game",
+            savePlayersBtn: "Save Changes",
+            zeroScoresBtn: "Reset & Zero Current Game Scores",
+            playerPlaceholder: (idx) => `Player ${idx} Name`,
+            defaultPlayerName: (idx) => `Player ${idx}`,
+            targetModalTitle: (t) => `Passed ${t} Points!`,
+            targetModalDesc: (names, t, nextT) => `<b>${names}</b> passed ${t} points. End game and save winner, or continue to ${nextT} points?`,
+            finishGameBtn: "Finish Game & Save to History",
+            continueGameBtn: (nextT) => `Continue to ${nextT} Points`,
+            historyModalTitle: "Match History",
+            emptyHistory: "No finished games in history yet",
+            clearHistoryBtn: "Clear All History",
+            historyWinnerLabel: (w) => `🏆 Winner: ${w}`,
+            historyTargetTag: (t, r) => `Target ${t} • ${r} rounds`,
+            confirmDeleteRound: "Delete this round?",
+            confirmZeroScores: "Reset all scores in the current game to zero?",
+            confirmClearHistory: "Clear all match history?",
+            afghanTimePrefix: "Afghanistan Time: ",
+            settingsTitle: "Settings",
+            settingsLangLabel: "🌐 Language / زبان برنامه",
+            settingsAccountLabel: "👤 Google Account (Gmail)",
+            settingsInstallLabel: "📲 Install Mobile App",
+            installAndroidBtn: "Install on Android",
+            installIosBtn: "Install on iPhone",
+            signInGmailBtn: "Sign in with Gmail",
+            signInPromptEmail: "Enter your Gmail address:",
+            signInPromptName: "Enter your display name:",
+            switchAccountBtn: "Switch Gmail Account",
+            logoutAccountBtn: "Sign Out",
+            notSignedInText: "Not signed in. Your game data is automatically saved offline on this device.",
+            androidInstalledMsg: "✅ App installation prompted or already installed.",
+            androidManualHelp: "📌 <b>Install on Android:</b> Tap the browser menu <b>(⋮)</b> at the top right of Chrome and select <b>Install app</b> or <b>Add to Home screen</b>.",
+            iosManualHelp: "🍏 <b>Install on iPhone (iOS):</b><br>1. Open this page in <b>Safari</b>.<br>2. Tap the <b>Share</b> button at the bottom.<br>3. Scroll down and tap <b>Add to Home Screen</b>, then tap <b>Add</b>."
+        }
+    };
+
+    let state = {
+        lang: 'fa',
+        players: ['بازیکن ۱', 'بازیکن ۲', 'بازیکن ۳'],
+        rounds: [],
+        targetScore: 100,
+        isFinished: false,
+        history: [],
+        user: null
+    };
+
+    let tempPlayers = [];
+    let isStartingNewGameMode = false;
+    let deferredInstallPrompt = null;
+    let accountDropdownOpen = false;
+
+    function t() {
+        return I18N[state.lang] || I18N.fa;
+    }
+
+    function toFaDigits(val) {
+        if (val === null || val === undefined) return '';
+        if (state.lang === 'en') return String(val);
+        const fa = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+        return String(val).replace(/[0-9]/g, w => fa[+w]);
+    }
+
+    function formatDisplayNum(val) {
+        if (val === null || val === undefined) return '';
+        if (val < 0) {
+            return state.lang === 'fa' ? `${toFaDigits(Math.abs(val))}-` : `-${Math.abs(val)}`;
+        }
+        return toFaDigits(val);
+    }
+
+    function normalizeDigits(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+            .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/[&<>"']/g, m => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[m]));
+    }
+
+    // تضمین اینکه بازی همیشه دقیقاً ۳ نفره باشد
+    function enforceThreePlayers() {
+        if (!Array.isArray(state.players)) {
+            state.players = ['بازیکن ۱', 'بازیکن ۲', 'بازیکن ۳'];
+        }
+        while (state.players.length < 3) {
+            state.players.push(t().defaultPlayerName(state.players.length + 1));
+        }
+        if (state.players.length > 3) {
+            state.players = state.players.slice(0, 3);
+        }
+        state.rounds = (state.rounds || []).map(r => {
+            const row = Array.isArray(r) ? r.slice(0, 3) : [0, 0, 0];
+            while (row.length < 3) row.push(0);
+            return row;
+        });
+    }
+
+    // محاسبه تعداد منفی‌های قبلی یک بازیکن در بازی فعلی و نمره منفی بعدی او (-3, -5, -7, ...)
+    function getNextPenaltyForPlayer(playerIdx) {
+        let negCount = 0;
+        for (const r of state.rounds) {
+            if ((Number(r[playerIdx]) || 0) < 0) {
+                negCount++;
+            }
+        }
+        return -(3 + negCount * 2);
+    }
+
+    function getAfghanDateTime() {
+        const now = new Date();
+        try {
+            if (state.lang === 'en') {
+                const dateStr = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Asia/Kabul',
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                }).format(now);
+                const timeStr = new Intl.DateTimeFormat('en-US', {
+                    timeZone: 'Asia/Kabul',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                }).format(now);
+                return { dateStr, timeStr, full: `${dateStr} • ${timeStr}` };
+            } else {
+                const dateStr = new Intl.DateTimeFormat('fa-AF-u-ca-persian', {
+                    timeZone: 'Asia/Kabul',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                }).format(now);
+                const timeStr = new Intl.DateTimeFormat('fa-AF', {
+                    timeZone: 'Asia/Kabul',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                }).format(now);
+                return { dateStr, timeStr, full: `${dateStr} - ساعت ${timeStr}` };
+            }
+        } catch (e) {
+            return { dateStr: '', timeStr: now.toLocaleTimeString(), full: now.toLocaleString() };
+        }
+    }
+
+    function updateClockUI() {
+        const clockEl = document.getElementById('live-afghan-clock');
+        if (clockEl) {
+            const dt = getAfghanDateTime();
+            clockEl.textContent = `${t().afghanTimePrefix}${dt.full}`;
+        }
+    }
+
+    function updateNetworkDot() {
+        const dot = document.getElementById('network-dot');
+        if (!dot) return;
+        if (navigator.onLine) {
+            dot.classList.remove('offline');
+            dot.title = state.lang === 'en' ? 'Online & Saved' : 'آنلاین و ذخیره‌شده';
+        } else {
+            dot.classList.add('offline');
+            dot.title = state.lang === 'en' ? 'Offline Mode (Saved on Device)' : 'حالت آفلاین (ذخیره در حافظه موبایل)';
+        }
+    }
+
+    window.addEventListener('online', updateNetworkDot);
+    window.addEventListener('offline', updateNetworkDot);
+
+    function loadData() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('ramji_state_v4');
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed.lang) state.lang = parsed.lang;
+                if (Array.isArray(parsed.players)) state.players = parsed.players;
+                if (Array.isArray(parsed.rounds)) state.rounds = parsed.rounds;
+                if (parsed.targetScore) state.targetScore = parsed.targetScore;
+                if (typeof parsed.isFinished === 'boolean') state.isFinished = parsed.isFinished;
+                if (Array.isArray(parsed.history)) state.history = parsed.history;
+                if (parsed.user) state.user = parsed.user;
+            }
+        } catch (e) {
+            console.error(e);
+        }
+        enforceThreePlayers();
+    }
+
+    function saveData() {
+        enforceThreePlayers();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        if (state.user && state.user.email) {
+            localStorage.setItem(`${STORAGE_KEY}_user_${state.user.email}`, JSON.stringify(state));
+        }
+    }
+
+    function getTotals() {
+        const totals = [0, 0, 0];
+        state.rounds.forEach(r => {
+            for (let i = 0; i < 3; i++) {
+                totals[i] += (Number(r[i]) || 0);
+            }
+        });
+        return totals;
+    }
+
+    function setLanguage(lang) {
+        state.lang = (lang === 'en') ? 'en' : 'fa';
+        saveData();
+        render();
+        renderSettingsAccountBox();
+    }
+
+    function applyStaticTranslations() {
+        const htmlRoot = document.getElementById('html-root');
+        htmlRoot.lang = state.lang;
+        htmlRoot.dir = state.lang === 'en' ? 'ltr' : 'rtl';
+
+        document.getElementById('page-title').textContent = t().pageTitle;
+        document.getElementById('app-title').textContent = t().appTitle;
+        document.getElementById('new-game-top-btn').textContent = t().newGameTop;
+        document.getElementById('app-credit-footer').innerHTML = t().creditFooter;
+        document.getElementById('btn-dock-players').textContent = t().dockPlayers;
+        document.getElementById('btn-dock-history').textContent = t().dockHistory;
+        document.getElementById('score-modal-desc').textContent = t().scoreModalDesc;
+        document.getElementById('btn-save-round').textContent = t().saveRoundBtn;
+        document.getElementById('btn-cancel-round').textContent = t().cancelBtn;
+        document.getElementById('btn-close-players').textContent = t().closeBtn;
+        document.getElementById('btn-zero-scores').textContent = t().zeroScoresBtn;
+        document.getElementById('history-modal-title').textContent = t().historyModalTitle;
+        document.getElementById('btn-clear-history').textContent = t().clearHistoryBtn;
+        document.getElementById('btn-close-history').textContent = t().closeBtn;
+
+        document.getElementById('settings-modal-title').textContent = t().settingsTitle;
+        document.getElementById('settings-lang-label').textContent = t().settingsLangLabel;
+        document.getElementById('settings-account-label').textContent = t().settingsAccountLabel;
+        document.getElementById('settings-install-label').textContent = t().settingsInstallLabel;
+        document.getElementById('btn-install-android-text').textContent = t().installAndroidBtn;
+        document.getElementById('btn-install-ios-text').textContent = t().installIosBtn;
+        document.getElementById('btn-close-settings').textContent = t().closeBtn;
+
+        document.getElementById('btn-lang-fa').classList.toggle('active', state.lang === 'fa');
+        document.getElementById('btn-lang-en').classList.toggle('active', state.lang === 'en');
+    }
+
+    function render() {
+        enforceThreePlayers();
+        applyStaticTranslations();
+        updateNetworkDot();
+        updateClockUI();
+
+        const totals = getTotals();
+        const maxScore = Math.max(...totals);
+        const hasScores = state.rounds.length > 0 && maxScore > 0;
+
+        const badge = document.getElementById('target-badge');
+        const dockAddBtn = document.getElementById('btn-dock-add-round');
+
+        if (state.isFinished) {
+            const winners = state.players.filter((_, i) => totals[i] === maxScore);
+            badge.textContent = t().targetFinished(winners.join(' ، '), state.rounds.length);
+            badge.classList.add('finished-text');
+            dockAddBtn.textContent = t().dockLocked;
+            dockAddBtn.disabled = true;
+            dockAddBtn.classList.add('locked');
+        } else {
+            badge.textContent = t().targetActive(state.targetScore, state.rounds.length);
+            badge.classList.remove('finished-text');
+            dockAddBtn.textContent = t().dockAddRound;
+            dockAddBtn.disabled = false;
+            dockAddBtn.classList.add('locked');
+        }
+
+        // ۱. کارت‌های بالای صفحه (۳ بازیکن)
+        const summaryGrid = document.getElementById('summary-grid');
+        summaryGrid.innerHTML = state.players.map((name, idx) => {
+            const score = totals[idx];
+            const isLeader = hasScores && score === maxScore;
+            const percent = Math.min(100, Math.max(0, Math.round((score / state.targetScore) * 100)));
+            const scoreClass = score < 0 ? 'player-total negative-score' : 'player-total';
+            return `
+                <div class="glass-card ${isLeader ? 'leader' : ''}" onclick="openPlayersModal(false)">
+                    <div class="leader-dot"></div>
+                    <div class="player-name">${escapeHtml(name)}</div>
+                    <div class="${scoreClass}">${formatDisplayNum(score)}</div>
+                    <div class="progress-track">
+                        <div class="progress-fill" style="width: ${percent}%"></div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // ۲. سرستون جدول (شماره دست + ۳ بازیکن + مجموع + حذف)
+        const sheetHeader = document.getElementById('sheet-header');
+        sheetHeader.innerHTML = `
+            <div>${t().roundCol}</div>
+            ${state.players.map(name => `<div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 3px;">${escapeHtml(name)}</div>`).join('')}
+            <div style="color:var(--accent);">${t().sumCol}</div>
+            <div></div>
+        `;
+
+        // ۳. ردیف‌های جدول نمرات هر دست به همراه مجموع، آیکن چکش برای ۲۰ و آیکن کارت ۴ برای ۱۵
+        const roundsList = document.getElementById('rounds-list');
+        if (state.rounds.length === 0) {
+            roundsList.innerHTML = `<div class="empty-state">${t().emptyRounds}</div>`;
+        } else {
+            roundsList.innerHTML = state.rounds.map((r, rIdx) => {
+                const s0 = Number(r[0]) || 0;
+                const s1 = Number(r[1]) || 0;
+                const s2 = Number(r[2]) || 0;
+                const roundSum = s0 + s1 + s2;
+
+                // بررسی حالت ۲۰ تکی و ۱۵ تکی
+                const isSingle20 = (
+                    (s0 === 20 && s1 === 0 && s2 === 0) ||
+                    (s1 === 20 && s0 === 0 && s2 === 0) ||
+                    (s2 === 20 && s0 === 0 && s1 === 0)
+                );
+                const isSingle15 = (
+                    (s0 === 15 && s1 === 0 && s2 === 0) ||
+                    (s1 === 15 && s0 === 0 && s2 === 0) ||
+                    (s2 === 15 && s0 === 0 && s1 === 0)
+                );
+
+                const playerCells = [s0, s1, s2].map(val => {
+                    if (val < 0) {
+                        return `<div class="negative-score">${formatDisplayNum(val)}</div>`;
+                    }
+                    if (val === 20 && isSingle20) {
+                        return `<div class="score-cell-wrap"><span>${toFaDigits(20)}</span><span class="hammer-icon" title="۲۰ نمره">🔨</span></div>`;
+                    }
+                    if (val === 15 && isSingle15) {
+                        return `<div class="score-cell-wrap"><span>${toFaDigits(15)}</span><span class="card4-icon" title="کارت ۴ نمره">۴♦</span></div>`;
+                    }
+                    return `<div>${toFaDigits(val)}</div>`;
+                }).join('');
+
+                const sumClass = roundSum < 0 ? 'round-sum-badge neg-sum' : 'round-sum-badge';
+
+                return `
+                    <div class="round-row">
+                        <div class="round-num">${toFaDigits(rIdx + 1)}</div>
+                        ${playerCells}
+                        <div><span class="${sumClass}">${formatDisplayNum(roundSum)}</span></div>
+                        <button class="del-btn" onclick="deleteRound(${rIdx})" ${state.isFinished ? 'disabled' : ''}>×</button>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+
+    // باز کردن مودال ثبت نمره دست جدید
+    function openScoreModal() {
+        if (state.isFinished) return;
+        const nextRound = state.rounds.length + 1;
+        document.getElementById('score-modal-title').textContent = t().scoreModalTitle(nextRound);
+        hideScoreError();
+
+        const grid = document.getElementById('score-inputs-grid');
+        grid.innerHTML = state.players.map((name, i) => {
+            const nextPenalty = getNextPenaltyForPlayer(i);
+            const hint = i < 2 ? 'next' : 'done';
+            return `
+                <div class="input-box">
+                    <button type="button" class="btn-minus-penalty" onclick="applyAutoNegative(${i})">
+                        ${t().minusBtnText(nextPenalty)}
+                    </button>
+                    <label>${escapeHtml(name)}</label>
+                    <input type="text" inputmode="numeric" enterkeyhint="${hint}" id="score-in-${i}" placeholder="${toFaDigits(0)}" autocomplete="off">
+                </div>
+            `;
+        }).join('');
+
+        // تنظیم پرش خودکار کیبورد از نفر اول به دوم، از دوم به سوم و در نفر سوم ثبت مستقیم
+        for (let i = 0; i < 3; i++) {
+            const inp = document.getElementById(`score-in-${i}`);
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.keyCode === 13) {
+                    e.preventDefault();
+                    if (i < 2) {
+                        const nextInp = document.getElementById(`score-in-${i + 1}`);
+                        if (nextInp) {
+                            nextInp.focus();
+                            nextInp.select();
+                        }
+                    } else {
+                        document.getElementById('btn-save-round').click();
+                    }
+                }
+            });
+            inp.addEventListener('input', hideScoreError);
+        }
+
+        document.getElementById('score-modal').classList.add('active');
+        setTimeout(() => {
+            const first = document.getElementById('score-in-0');
+            if (first) first.focus();
+        }, 220);
+    }
+
+    function showScoreError(msg) {
+        const errEl = document.getElementById('score-error-msg');
+        if (!errEl) return;
+        errEl.textContent = msg;
+        errEl.classList.add('show');
+    }
+
+    function hideScoreError() {
+        const errEl = document.getElementById('score-error-msg');
+        if (!errEl) return;
+        errEl.textContent = '';
+        errEl.classList.remove('show');
+    }
+
+    // ثبت اتومات نمره منفی برای یک بازیکن (بقیه صفر می‌شوند و مستقیم دست ثبت می‌شود)
+    function applyAutoNegative(playerIdx) {
+        if (state.isFinished) return;
+        const penaltyVal = getNextPenaltyForPlayer(playerIdx);
+        const newRound = [0, 0, 0];
+        newRound[playerIdx] = penaltyVal;
+
+        state.rounds.push(newRound);
+        saveData();
+        closeModal('score-modal');
+        render();
+        checkTargetReached();
+    }
+
+    // ثبت دستی نمرات با بررسی قانون دقیقاً ۱۵ نمره (نه کمتر و نه بیشتر) و استثنای ۲۰ نمره تکی
+    function saveRound() {
+        if (state.isFinished) return;
+        hideScoreError();
+
+        const scores = [0, 0, 0];
+        for (let i = 0; i < 3; i++) {
+            const inp = document.getElementById(`score-in-${i}`);
+            const rawVal = normalizeDigits(inp ? inp.value.trim() : '');
+            const num = rawVal === '' ? 0 : parseInt(rawVal, 10);
+            scores[i] = isNaN(num) ? 0 : num;
+        }
+
+        // جلوگیری از وارد کردن عدد منفی دستی
+        if (scores.some(s => s < 0)) {
+            showScoreError(t().errNegativeManual);
+            return;
+        }
+
+        const total = scores[0] + scores[1] + scores[2];
+        const hasTwenty = scores.some(s => s === 20);
+        const isValidSingle20 = (
+            (scores[0] === 20 && scores[1] === 0 && scores[2] === 0) ||
+            (scores[1] === 20 && scores[0] === 0 && scores[2] === 0) ||
+            (scores[2] === 20 && scores[0] === 0 && scores[1] === 0)
+        );
+
+        // ۱. اگر یک نفر ۲۰ گرفته باشد ولی به نفر دیگر هم نمره داده شده باشد
+        if (hasTwenty && !isValidSingle20) {
+            showScoreError(t().errTwentyNotAlone);
+            return;
+        }
+
+        // ۲. اگر مجموع از ۱۵ کمتر باشد (فقط هشدار پایین بودن از ۱۵)
+        if (total < 15) {
+            showScoreError(t().errBelow15(total));
+            return;
+        }
+
+        // ۳. اگر مجموع از ۱۵ بیشتر باشد و حالت ۲۰ تکی نباشد (فقط هشدار بیشتر شدن از ۱۵)
+        if (total > 15 && !isValidSingle20) {
+            showScoreError(t().errAbove15(total));
+            return;
+        }
+
+        state.rounds.push(scores);
+        saveData();
+        closeModal('score-modal');
+        render();
+        checkTargetReached();
+    }
+
+    function finishAndArchiveGame() {
+        const totals = getTotals();
+        const maxScore = Math.max(...totals);
+        const winners = state.players.filter((_, i) => totals[i] === maxScore);
+        const afghanDT = getAfghanDateTime();
+
+        state.history.unshift({
+            date: afghanDT.full,
+            target: state.targetScore,
+            roundsCount: state.rounds.length,
+            winner: winners.join(' ، '),
+            results: state.players.map((name, i) => ({ name, score: totals[i] }))
+        });
+
+        state.isFinished = true;
+        saveData();
+        closeModal('target-modal');
+        render();
+    }
+
+    function extendTargetScore() {
+        state.targetScore += 50;
+        saveData();
+        closeModal('target-modal');
+        render();
+        checkTargetReached();
+    }
+
+    function startNewGameTop() {
+        openPlayersModal(true);
+    }
+
+    function openPlayersModal(isNewGame) {
+        isStartingNewGameMode = isNewGame;
+        enforceThreePlayers();
+        tempPlayers = [...state.players];
+
+        const titleEl = document.getElementById('players-modal-title');
+        const descEl = document.getElementById('players-modal-desc');
+        const saveBtn = document.getElementById('btn-save-players');
+        const resetSec = document.getElementById('reset-scores-section');
+
+        if (isNewGame) {
+            titleEl.textContent = t().playersTitleNew;
+            descEl.textContent = t().playersDescNew;
+            saveBtn.textContent = t().startGameBtn;
+            resetSec.style.display = 'none';
+        } else {
+            titleEl.textContent = t().playersTitleEdit;
+            descEl.textContent = t().playersDescEdit;
+            saveBtn.textContent = t().savePlayersBtn;
+            resetSec.style.display = state.rounds.length > 0 ? 'block' : 'none';
+        }
+
+        renderPlayersEditor();
+        document.getElementById('players-modal').classList.add('active');
+    }
+
+    function renderPlayersEditor() {
+        const list = document.getElementById('players-editor-list');
+        list.innerHTML = tempPlayers.slice(0, 3).map((name, idx) => `
+            <div class="player-edit-row">
+                <input type="text" value="${escapeHtml(name)}" placeholder="${t().playerPlaceholder(idx + 1)}" oninput="tempPlayers[${idx}] = this.value">
+            </div>
+        `).join('');
+    }
+
+    function savePlayersChanges() {
+        const cleaned = tempPlayers.slice(0, 3).map((name, i) => name.trim() || t().defaultPlayerName(i + 1));
+
+        if (isStartingNewGameMode) {
+            state.players = cleaned;
+            state.rounds = [];
+            state.targetScore = 100;
+            state.isFinished = false;
+        } else {
+            state.players = cleaned;
+        }
+
+        saveData();
+        closeModal('players-modal');
+        render();
+    }
+
+    function deleteRound(rIdx) {
+        if (state.isFinished) return;
+        if (confirm(t().confirmDeleteRound)) {
+            state.rounds.splice(rIdx, 1);
+            saveData();
+            render();
+        }
+    }
+
+    function zeroCurrentScores() {
+        if (confirm(t().confirmZeroScores)) {
+            state.rounds = [];
+            state.targetScore = 100;
+            state.isFinished = false;
+            saveData();
+            closeModal('players-modal');
+            render();
+        }
+    }
+
+    function openHistoryModal() {
+        const list = document.getElementById('history-list');
+        const clearBtn = document.getElementById('btn-clear-history');
+
+        if (!state.history || state.history.length === 0) {
+            list.innerHTML = `<div class="empty-state" style="padding:24px 10px;">${t().emptyHistory}</div>`;
+            clearBtn.style.display = 'none';
+        } else {
+            clearBtn.style.display = 'block';
+            list.innerHTML = state.history.map(item => `
+                <div class="history-item">
+                    <div class="history-top">
+                        <span class="history-winner">${t().historyWinnerLabel(escapeHtml(item.winner))}</span>
+                        <span class="history-target-tag">${t().historyTargetTag(item.target, item.roundsCount || 0)}</span>
+                    </div>
+                    <div class="history-datetime">🕒 ${escapeHtml(item.date)}</div>
+                    <div class="history-scores">
+                        ${item.results.map(r => `
+                            <span class="history-pill">${escapeHtml(r.name)}: <b class="${r.score < 0 ? 'negative-score' : ''}">${formatDisplayNum(r.score)}</b></span>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('history-modal').classList.add('active');
+    }
+
+    function clearHistory() {
+        if (confirm(t().confirmClearHistory)) {
+            state.history = [];
+            saveData();
+            openHistoryModal();
+        }
+    }
+
+    function openSettingsModal() {
+        accountDropdownOpen = false;
+        document.getElementById('install-feedback-box').classList.remove('show');
+        renderSettingsAccountBox();
+        document.getElementById('settings-modal').classList.add('active');
+    }
+
+    function renderSettingsAccountBox() {
+        const container = document.getElementById('settings-account-content');
+        if (!container) return;
+
+        if (state.user && state.user.email) {
+            const initial = (state.user.name || state.user.email).charAt(0).toUpperCase();
+            container.innerHTML = `
+                <div class="account-user-row" onclick="toggleAccountDropdown()">
+                    <div class="account-user-left">
+                        <div class="user-avatar-badge">${escapeHtml(initial)}</div>
+                        <div class="account-user-texts">
+                            <div class="account-user-name">${escapeHtml(state.user.name)}</div>
+                            <div class="account-user-email">${escapeHtml(state.user.email)}</div>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.8rem; color: var(--accent);">▾</span>
+                </div>
+                <div class="account-dropdown-actions ${accountDropdownOpen ? 'open' : ''}" id="account-dropdown-menu">
+                    <button class="pill-btn" style="width:100%;text-align:center;" onclick="triggerGoogleSignIn()">${t().switchAccountBtn}</button>
+                    <button class="btn-reset-scores" onclick="signOutGmail()">${t().logoutAccountBtn}</button>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `
+                <p style="font-size:0.76rem; color:var(--text-secondary); margin-bottom:10px; line-height:1.5;">
+                    ${t().notSignedInText}
+                </p>
+                <div id="google-gsi-btn-container" style="display:flex; justify-content:center; margin-bottom:6px;"></div>
+                <button class="pill-btn gold" style="width:100%; padding:11px; text-align:center; font-size:0.84rem;" onclick="triggerGoogleSignIn()">
+                    📧 ${t().signInGmailBtn}
+                </button>
+            `;
+            renderOfficialGoogleButtonIfReady();
+        }
+    }
+
+    function toggleAccountDropdown() {
+        accountDropdownOpen = !accountDropdownOpen;
+        const menu = document.getElementById('account-dropdown-menu');
+        if (menu) menu.classList.toggle('open', accountDropdownOpen);
+    }
+
+    function parseJwtPayload(token) {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function handleGoogleCredentialResponse(response) {
+        const payload = parseJwtPayload(response.credential);
+        if (payload && payload.email) {
+            loginWithUserObject({
+                name: payload.name || payload.given_name || payload.email.split('@')[0],
+                email: payload.email,
+                picture: payload.picture || ''
+            });
+        }
+    }
+
+    function renderOfficialGoogleButtonIfReady() {
+        if (window.google && google.accounts && google.accounts.id && !GOOGLE_CLIENT_ID.startsWith("YOUR_GOOGLE")) {
+            try {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleGoogleCredentialResponse
+                });
+                const btnWrap = document.getElementById('google-gsi-btn-container');
+                if (btnWrap) {
+                    google.accounts.id.renderButton(btnWrap, { theme: "filled_black", size: "large", shape: "pill" });
+                }
+            } catch (e) {
+                console.warn(e);
+            }
+        }
+    }
+
+    function triggerGoogleSignIn() {
+        if (window.google && google.accounts && google.accounts.id && !GOOGLE_CLIENT_ID.startsWith("YOUR_GOOGLE")) {
+            google.accounts.id.prompt();
+            return;
+        }
+        const email = prompt(t().signInPromptEmail, state.user?.email || "user@gmail.com");
+        if (!email || !email.trim()) return;
+        const defaultName = email.split('@')[0];
+        const name = prompt(t().signInPromptName, state.user?.name || defaultName) || defaultName;
+
+        loginWithUserObject({
+            name: name.trim(),
+            email: email.trim().toLowerCase()
+        });
+    }
+
+    function loginWithUserObject(userObj) {
+        const savedUserRaw = localStorage.getItem(`${STORAGE_KEY}_user_${userObj.email}`);
+        if (savedUserRaw) {
+            try {
+                const userSavedState = JSON.parse(savedUserRaw);
+                state.players = userSavedState.players || state.players;
+                state.rounds = userSavedState.rounds || state.rounds;
+                state.targetScore = userSavedState.targetScore || state.targetScore;
+                state.isFinished = !!userSavedState.isFinished;
+                state.history = userSavedState.history || state.history;
+            } catch (e) {}
+        }
+        state.user = userObj;
+        accountDropdownOpen = false;
+        saveData();
+        render();
+        renderSettingsAccountBox();
+    }
+
+    function signOutGmail() {
+        state.user = null;
+        accountDropdownOpen = false;
+        saveData();
+        renderSettingsAccountBox();
+    }
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredInstallPrompt = e;
+    });
+
+    async function installAndroidApp() {
+        const box = document.getElementById('install-feedback-box');
+        if (deferredInstallPrompt) {
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            if (outcome === 'accepted') {
+                deferredInstallPrompt = null;
+            }
+            box.innerHTML = t().androidInstalledMsg;
+            box.classList.add('show');
+        } else {
+            box.innerHTML = t().androidManualHelp;
+            box.classList.add('show');
+        }
+    }
+
+    function toggleIosInstallHelp() {
+        const box = document.getElementById('install-feedback-box');
+        box.innerHTML = t().iosManualHelp;
+        box.classList.add('show');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function closeOnBg(e, id) {
+        if (e.target.id === id) closeModal(id);
+    }
+
+    // راه‌اندازی اولیه
+    loadData();
+    render();
+    setInterval(updateClockUI, 1000);
+</script>
+
+</body>
+</html>
